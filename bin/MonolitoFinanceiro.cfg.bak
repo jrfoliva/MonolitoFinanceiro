@@ -1,0 +1,7 @@
+[BANCO DE DADOS]
+DRIVERID=mysql
+DATABASE=sistemas
+USER_NAME=root
+PASSWORD=masterkey
+SERVER=localhost
+port=3306
