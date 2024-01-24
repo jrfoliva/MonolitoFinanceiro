@@ -11,7 +11,7 @@ uses
 
 type
   TdmUsuarios = class(TDataModule)
-    sqlUsuarios: TFDQuery;
+    qryUsuarios: TFDQuery;
     cdsUsuarios: TClientDataSet;
     dspUsuarios: TDataSetProvider;
     cdsUsuariosID: TStringField;
@@ -21,21 +21,21 @@ type
     cdsUsuariosSTATUS: TStringField;
     cdsUsuariosDATA_CADASTRO: TDateField;
   private
+    FIdUsuarioLogado: String;
     FNomeUsuarioLogado: String;
     FLoginUsuarioLogado: String;
-    FIDUsuarioLogado: String;
     procedure SetIDUsuarioLogado(const Value: String);
     procedure SetLoginUsuarioLogado(const Value: String);
     procedure SetNomeUsuarioLogado(const Value: String);
     { Private declarations }
+    property IdUsuarioLogado: String read FIdUsuarioLogado write FIdUsuarioLogado;
+    property NomeUsuarioLogado: String read FNomeUsuarioLogado write FNomeUsuarioLogado;
+    property LoginUsuarioLogado: String read FLoginUsuarioLogado write FLoginUsuarioLogado;
+
   public
     { Public declarations }
     function TemLoginCadastrado(Login, ID: String): Boolean;
     procedure EfetuarLogin(Login: String; Senha: String);
-
-    property NomeUsuarioLogado: String read FNomeUsuarioLogado write FNomeUsuarioLogado;
-    property LoginUsuarioLogado: String read FLoginUsuarioLogado write FLoginUsuarioLogado;
-    property IDUsuarioLogado: String read FIDUsuarioLogado write FIDUsuarioLogado;
   end;
 
 var
@@ -52,11 +52,11 @@ uses
 
 procedure TdmUsuarios.EfetuarLogin(Login, Senha: String);
 var
-  SQLConsulta: TFDQuery;
+  qry: TFDQuery;
 begin
-  SQLConsulta := TFDQuery.Create(nil);
+  qry := TFDQuery.Create(nil);
   try
-    with SQLConsulta do
+    with qry do
     begin
       Connection := dmConexao.SQLConexao;
       SQL.Clear;
@@ -77,8 +77,8 @@ begin
       FLoginUsuarioLogado := fieldbyname('LOGIN').AsString;
     end;
   finally
-    SQLConsulta.Close;
-    SQLConsulta.Free;
+    qry.Close;
+    qry.Free;
   end;
 
 end;

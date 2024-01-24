@@ -8,10 +8,10 @@ object dmConexao: TdmConexao
       'User_Name=root'
       'Password=masterkey'
       'DriverID=MySQL')
-    Connected = True
     LoginPrompt = False
-    Left = 64
-    Top = 104
+    Transaction = FDTransaction1
+    Left = 40
+    Top = 112
   end
   object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
     VendorLib = 'D:\FONTES\DELPHI_PROJETOS\MonolitoFinanceiro\lib\libmysql.dll'
@@ -25,7 +25,7 @@ object dmConexao: TdmConexao
   end
   object FDTransaction1: TFDTransaction
     Connection = SQLConexao
-    Left = 224
-    Top = 136
+    Left = 208
+    Top = 104
   end
 end

@@ -1,8 +1,7 @@
 object dmUsuarios: TdmUsuarios
   Height = 345
   Width = 484
-  object sqlUsuarios: TFDQuery
-    Active = True
+  object qryUsuarios: TFDQuery
     Connection = dmConexao.SQLConexao
     SQL.Strings = (
       'select * from usuarios')
@@ -57,7 +56,7 @@ object dmUsuarios: TdmUsuarios
     end
   end
   object dspUsuarios: TDataSetProvider
-    DataSet = sqlUsuarios
+    DataSet = qryUsuarios
     Options = [poAllowCommandText, poUseQuoteChar]
     Left = 128
     Top = 32

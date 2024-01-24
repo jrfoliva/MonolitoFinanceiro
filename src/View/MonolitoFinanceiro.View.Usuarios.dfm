@@ -14,7 +14,8 @@ inherited frmUsuarios: TfrmUsuarios
     inherited CardCadastro: TCard
       Width = 624
       Height = 436
-      ExplicitWidth = 620
+      ExplicitWidth = 624
+      ExplicitHeight = 436
       object Label2: TLabel [0]
         Left = 25
         Top = 59
@@ -70,24 +71,25 @@ inherited frmUsuarios: TfrmUsuarios
       inherited Panel1: TPanel
         Top = 371
         Width = 624
-        ExplicitWidth = 620
+        ExplicitTop = 371
+        ExplicitWidth = 624
         inherited btnCancelar: TButton
           Left = 545
           TabOrder = 1
-          ExplicitLeft = 541
+          ExplicitLeft = 545
         end
         inherited btnSalvar: TButton
           Left = 467
           TabOrder = 0
           OnClick = btnSalvarClick
-          ExplicitLeft = 463
+          ExplicitLeft = 467
         end
       end
       inherited pnlInfoTop: TPanel
         Width = 624
         TabOrder = 5
         ExplicitTop = 0
-        ExplicitWidth = 620
+        ExplicitWidth = 624
         inherited lblInfOperacao: TLabel
           Width = 622
           Height = 39
@@ -146,11 +148,10 @@ inherited frmUsuarios: TfrmUsuarios
       Width = 624
       Height = 436
       Color = clGradientInactiveCaption
-      ExplicitWidth = 624
-      ExplicitHeight = 436
+      ExplicitWidth = 620
       inherited pnlPesquisar: TPanel
         Width = 624
-        ExplicitWidth = 624
+        ExplicitWidth = 620
         inherited Label1: TLabel
           Width = 64
           Font.Style = [fsBold]
@@ -159,18 +160,17 @@ inherited frmUsuarios: TfrmUsuarios
         inherited btnPesquisar: TButton
           Left = 545
           OnClick = btnPesquisarClick
-          ExplicitLeft = 545
+          ExplicitLeft = 541
         end
       end
       inherited PnlBotoes: TPanel
         Top = 368
         Width = 624
-        ExplicitTop = 368
-        ExplicitWidth = 624
+        ExplicitWidth = 620
         inherited btnSair: TButton
           Left = 545
           TabOrder = 4
-          ExplicitLeft = 545
+          ExplicitLeft = 541
         end
         inherited btnImprimir: TButton
           TabOrder = 3
@@ -188,8 +188,7 @@ inherited frmUsuarios: TfrmUsuarios
       inherited pnlGrid: TPanel
         Width = 624
         Height = 303
-        ExplicitWidth = 624
-        ExplicitHeight = 303
+        ExplicitWidth = 620
         inherited DBGrid1: TDBGrid
           Width = 622
           Height = 301
@@ -2594,7 +2593,7 @@ inherited frmUsuarios: TfrmUsuarios
       000000000000}
   end
   inherited DataSource1: TDataSource
-    DataSet = dmUsuarios.cdsUsuarios
+    DataSet = dmUsuarios.qryUsuarios
     Left = 585
     Top = 49
   end

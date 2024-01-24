@@ -12,7 +12,7 @@ object frmSplash: TfrmSplash
   Font.Height = -16
   Font.Name = 'Segoe UI'
   Font.Style = []
-  Position = poScreenCenter
+  Position = poMainFormCenter
   TextHeight = 21
   object pnlPrincipal: TPanel
     Left = 0
@@ -2184,7 +2184,6 @@ object frmSplash: TfrmSplash
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
-      ExplicitTop = 245
       ExplicitWidth = 4
     end
     object lblSistema: TLabel

@@ -19,8 +19,7 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   { Private declarations }
-    const
-    ARQUIVOCONFIGURACAO = 'MonolitoFinanceiro.cfg';
+    const ARQUIVOCONFIGURACAO = 'MonolitoFinanceiro.cfg';
   public
     { Public declarations }
     procedure CarregarConfiguracoes;
@@ -46,13 +45,13 @@ var
 begin
   SQLConexao.Params.Clear;
   if not FileExists(ARQUIVOCONFIGURACAO) then
-    raise Exception.Create('Arquivo de configuração não encontrado!');
+    raise Exception.Create('Arquivo de configuração não encontrado.');
   ListaParametros := TStringList.Create;
   try
     ListaParametros.LoadFromFile(ARQUIVOCONFIGURACAO);
     for Contador := 0 to Pred(ListaParametros.Count) do
     begin
-      if ListaParametros[Contador].IndexOf('=') > 0 then
+      if ListaParametros[Contador].IndexOf('=') > -1 then
       begin
         ParametroNome := ListaParametros[Contador].Split(['='])[0].Trim;
         ParametroValor:= ListaParametros[Contador].Split(['='])[1].Trim;
