@@ -13,6 +13,7 @@ object frmLogin: TfrmLogin
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
+  OnShow = FormShow
   TextHeight = 15
   object pnlEsquerda: TPanel
     Left = 0
@@ -26,7 +27,7 @@ object frmLogin: TfrmLogin
     ParentBackground = False
     TabOrder = 1
     VerticalAlignment = taAlignTop
-    ExplicitHeight = 321
+    ExplicitHeight = 306
     object imgLogo: TImage
       Left = 0
       Top = 83
@@ -1572,9 +1573,8 @@ object frmLogin: TfrmLogin
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 217
-    ExplicitWidth = 272
-    ExplicitHeight = 251
+    ExplicitWidth = 320
+    ExplicitHeight = 306
     object Panel1: TPanel
       Left = 0
       Top = 0
@@ -1584,6 +1584,7 @@ object frmLogin: TfrmLogin
       BevelOuter = bvNone
       Padding.Top = 30
       TabOrder = 0
+      ExplicitWidth = 320
       object Label1: TLabel
         Left = 0
         Top = 30
@@ -1599,7 +1600,6 @@ object frmLogin: TfrmLogin
         Font.Style = [fsBold]
         ParentFont = False
         Layout = tlCenter
-        ExplicitTop = 20
         ExplicitWidth = 287
       end
       object Label2: TLabel
@@ -1628,9 +1628,8 @@ object frmLogin: TfrmLogin
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 6
-      ExplicitTop = 103
-      ExplicitHeight = 311
+      ExplicitWidth = 320
+      ExplicitHeight = 209
       object PnlUsuario: TPanel
         Left = 0
         Top = 0
@@ -1643,6 +1642,7 @@ object frmLogin: TfrmLogin
         Padding.Top = 10
         Padding.Right = 50
         TabOrder = 0
+        ExplicitWidth = 320
         object Label4: TLabel
           Left = 50
           Top = 10
@@ -1656,7 +1656,6 @@ object frmLogin: TfrmLogin
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
-          ExplicitTop = 50
           ExplicitWidth = 54
         end
         object edtLogin: TEdit
@@ -1672,6 +1671,7 @@ object frmLogin: TfrmLogin
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 220
         end
       end
       object pnlButton: TPanel
@@ -1686,7 +1686,7 @@ object frmLogin: TfrmLogin
         Padding.Top = 5
         Padding.Right = 50
         TabOrder = 2
-        ExplicitTop = 65
+        ExplicitWidth = 320
         object btnEntrar: TButton
           Left = 50
           Top = 5
@@ -1702,7 +1702,7 @@ object frmLogin: TfrmLogin
           ParentFont = False
           TabOrder = 0
           OnClick = btnEntrarClick
-          ExplicitTop = 6
+          ExplicitWidth = 220
         end
       end
       object pnlSenha: TPanel
@@ -1717,6 +1717,7 @@ object frmLogin: TfrmLogin
         Padding.Top = 10
         Padding.Right = 50
         TabOrder = 1
+        ExplicitWidth = 320
         object Label5: TLabel
           Left = 50
           Top = 10
@@ -1746,6 +1747,7 @@ object frmLogin: TfrmLogin
           ParentFont = False
           PasswordChar = '*'
           TabOrder = 0
+          ExplicitWidth = 220
         end
       end
     end

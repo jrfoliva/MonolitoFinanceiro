@@ -25,6 +25,7 @@ type
     edtSenha: TEdit;
     btnEntrar: TButton;
     procedure btnEntrarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -37,7 +38,7 @@ var
 implementation
 
 uses
-  MonolitoFinanceiro.Model.Usuarios;
+  MonolitoFinanceiro.Model.Usuarios, MonolitoFinanceiro.Model.Sistema;
 
 {$R *.dfm}
 
@@ -59,6 +60,8 @@ begin
 
   try
     dmUsuarios.EfetuarLogin(Trim(edtLogin.Text), Trim(edtSenha.Text));
+    dmSistema.DataUltimoAcesso(Now);
+    dmSistema.UsuaruiUltimoAcesso(dmUsuarios.GetUsuarioLogado.Login);
     ModalResult := mrOk;
   Except
     on Erro: Exception do
@@ -66,10 +69,12 @@ begin
       Application.MessageBox(PWideChar(Erro.Message), 'Atenção', MB_OK + MB_ICONERROR);
       edtLogin.SetFocus;
     end;
-
   end;
+end;
 
-
+procedure TfrmLogin.FormShow(Sender: TObject);
+begin
+  edtLogin.Text := dmSistema.UsuarioUltimoAcesso;
 end;
 
 end.

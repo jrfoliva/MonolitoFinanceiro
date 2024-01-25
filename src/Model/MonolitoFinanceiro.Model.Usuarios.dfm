@@ -1,4 +1,6 @@
 object dmUsuarios: TdmUsuarios
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 345
   Width = 484
   object qryUsuarios: TFDQuery
