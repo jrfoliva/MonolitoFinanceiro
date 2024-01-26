@@ -139,6 +139,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Model\Entidades\MonolitoFinanceiro.Model.Entidade.Usuario.pas"/>
+        <DCCReference Include="..\Model\MonolitoFinanceiro.Model.Sistema.pas">
+            <Form>dmSistema</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <None Include="ModelSupport_MonolitoFinanceiro\default.txaPackage"/>
         <None Include="ModelSupport_MonolitoFinanceiro\default.txvpck"/>
         <None Include="ModelSupport_MonolitoFinanceiro\MonolitoFinanceiro\default.txvpck"/>

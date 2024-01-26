@@ -9,8 +9,8 @@ inherited frmUsuarios: TfrmUsuarios
   inherited PnlPrincipal: TCardPanel
     Width = 626
     Height = 438
-    ActiveCard = CardPesquisa
     ExplicitWidth = 622
+    ExplicitHeight = 437
     inherited CardCadastro: TCard
       Width = 624
       Height = 436
@@ -88,11 +88,9 @@ inherited frmUsuarios: TfrmUsuarios
       inherited pnlInfoTop: TPanel
         Width = 624
         TabOrder = 5
-        ExplicitTop = 0
         ExplicitWidth = 624
         inherited lblInfOperacao: TLabel
           Width = 622
-          Height = 39
         end
       end
       object edtNome: TEdit
@@ -156,6 +154,9 @@ inherited frmUsuarios: TfrmUsuarios
           Width = 64
           Font.Style = [fsBold]
           ExplicitWidth = 64
+        end
+        inherited edtPesquisa: TEdit
+          OnKeyDown = edtPesquisaKeyDown
         end
         inherited btnPesquisar: TButton
           Left = 545
@@ -2593,8 +2594,8 @@ inherited frmUsuarios: TfrmUsuarios
       000000000000}
   end
   inherited DataSource1: TDataSource
-    DataSet = dmUsuarios.qryUsuarios
-    Left = 585
-    Top = 49
+    DataSet = dmUsuarios.cdsUsuarios
+    Left = 449
+    Top = 241
   end
 end

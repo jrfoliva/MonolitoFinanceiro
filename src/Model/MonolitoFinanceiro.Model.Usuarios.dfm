@@ -6,7 +6,8 @@ object dmUsuarios: TdmUsuarios
   object qryUsuarios: TFDQuery
     Connection = dmConexao.SQLConexao
     SQL.Strings = (
-      'select * from usuarios')
+      'select * from usuarios'
+      'Order by Nome;')
     Left = 48
     Top = 32
   end
@@ -14,7 +15,7 @@ object dmUsuarios: TdmUsuarios
     Aggregates = <>
     Params = <>
     ProviderName = 'dspUsuarios'
-    Left = 216
+    Left = 224
     Top = 32
     object cdsUsuariosID: TStringField
       DisplayWidth = 5
@@ -42,6 +43,7 @@ object dmUsuarios: TdmUsuarios
       Origin = 'SENHA'
       Required = True
       Visible = False
+      Size = 60
     end
     object cdsUsuariosSTATUS: TStringField
       DisplayWidth = 7

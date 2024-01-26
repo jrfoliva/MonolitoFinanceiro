@@ -7,8 +7,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MonolitoFinanceiro.View.CadastroPadrao,
   Data.DB, System.ImageList, Vcl.ImgList, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls,
-  Vcl.ExtCtrls, Vcl.WinXPanels,
-  MonolitoFinanceiro.Model.Usuarios, Vcl.WinXCtrls,
+  Vcl.ExtCtrls, Vcl.WinXPanels, Vcl.WinXCtrls,
   MonolitoFinanceiro.Utilitarios;
 
 type
@@ -29,6 +28,8 @@ type
     procedure btnExcluirClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BuscaRegistros;
+    procedure edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     procedure LimparCampos;
@@ -42,6 +43,9 @@ var
 
 implementation
 
+uses
+  MonolitoFinanceiro.Model.Usuarios;
+
 {$R *.dfm}
 
 procedure TfrmUsuarios.btnAlterarClick(Sender: TObject);
@@ -50,7 +54,7 @@ begin
   LblInfOperacao.Caption := 'Alteração de Usuário';
   with dmUsuarios.cdsUsuarios do
   begin
-    edtNome.Text  := fieldbyname('nome').AsString;
+    edtNome.Text := fieldbyname('nome').AsString;
     edtLogin.Text := fieldbyname('login').AsString;
     edtSenha.Text := fieldbyname('senha').AsString;
 
@@ -73,14 +77,17 @@ end;
 procedure TfrmUsuarios.btnExcluirClick(Sender: TObject);
 begin
   inherited;
-  if Application.MessageBox('Deseja realmente excluir o registro?','Pergunta', MB_YESNO + MB_ICONQUESTION) <> mrYes then
+  if Application.MessageBox('Deseja realmente excluir o registro?', 'Pergunta',
+    MB_YESNO + MB_ICONQUESTION) <> mrYes then
     exit;
 
   try
     dmUsuarios.cdsUsuarios.Delete;
     dmUsuarios.cdsUsuarios.ApplyUpdates(0);
-  Except on E: Exception do
-    Application.MessageBox(PWideChar(E.Message), 'Erro ao excluir o registro!', MB_OK + MB_ICONERROR);
+  Except
+    on E: Exception do
+      Application.MessageBox(PWideChar(E.Message),
+        'Erro ao excluir o registro!', MB_OK + MB_ICONERROR);
   end;
 
 end;
@@ -97,7 +104,14 @@ end;
 procedure TfrmUsuarios.btnPesquisarClick(Sender: TObject);
 begin
   inherited;
-  dmUsuarios.cdsUsuarios.Locate('Nome', Trim(edtPesquisa.text), [loCaseInsensitive]);
+  if (trim(edtPesquisa.Text) <> '') then
+  begin
+    dmUsuarios.cdsUsuarios.Close;
+    dmUsuarios.cdsUsuarios.CommandText := 'Select * from USUARIOS Where nome like :pNome';
+    dmUsuarios.cdsUsuarios.ParamByName('pNome').AsString := trim(edtPesquisa.Text) + '%';
+    dmUsuarios.cdsUsuarios.Open;
+  end
+  else BuscaRegistros;
 end;
 
 procedure TfrmUsuarios.btnSalvarClick(Sender: TObject);
@@ -129,13 +143,15 @@ begin
     abort
   end;
 
-  if dmUsuarios.TemLoginCadastrado(Trim(edtLogin.Text), dmUsuarios.cdsUsuarios.fieldbyname('id').AsString) then
+  if dmUsuarios.TemLoginCadastrado(trim(edtLogin.Text),
+    dmUsuarios.cdsUsuarios.fieldbyname('id').AsString) then
   begin
-    Application.MessageBox(PWideChar(Format('O login %s já existe no cadastro de usuários.',[edtLogin.Text])), 'Atenção!',MB_OK + MB_ICONWARNING);
+    Application.MessageBox
+      (PWideChar(Format('O login %s já existe no cadastro de usuários.',
+      [edtLogin.Text])), 'Atenção!', MB_OK + MB_ICONWARNING);
     edtLogin.SetFocus;
     abort;
   end;
-
 
   LStatus := 'A';
   if ToggleStatus.State = tssOff then
@@ -168,7 +184,7 @@ end;
 
 procedure TfrmUsuarios.BuscaRegistros;
 begin
-with dmUsuarios.cdsUsuarios do
+  with dmUsuarios.cdsUsuarios do
   begin
     Close;
     CommandText := ' Select * from USUARIOS order by nome ';
@@ -177,22 +193,32 @@ with dmUsuarios.cdsUsuarios do
 
 end;
 
+procedure TfrmUsuarios.edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  if Trim(edtPesquisa.Text) <> '' then
+    btnPesquisarClick(Self);
+
+end;
+
 procedure TfrmUsuarios.FormShow(Sender: TObject);
 begin
   inherited;
+  PnlPrincipal.ActiveCard := CardPesquisa;
   BuscaRegistros;
 end;
 
 procedure TfrmUsuarios.LimparCampos;
 var
-  Contador : integer;
+  Contador: integer;
 begin
   for Contador := 0 to Pred(ComponentCount) do
   begin
     if Components[Contador] is TCustomEdit then
       TCustomEdit(Components[Contador]).Clear
     else if Components[Contador] is TToggleSwitch then
-      TToggleSwitch(COMPONENTS[Contador]).State := tssOn;
+      TToggleSwitch(Components[Contador]).State := tssOn;
 
   end;
 

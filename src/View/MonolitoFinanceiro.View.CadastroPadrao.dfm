@@ -21,9 +21,11 @@ object frmCadastroPadrao: TfrmCadastroPadrao
     Width = 620
     Height = 437
     Align = alClient
-    ActiveCard = CardCadastro
+    ActiveCard = CardPesquisa
     Caption = 'PnlPrincipal'
     TabOrder = 0
+    ExplicitWidth = 616
+    ExplicitHeight = 436
     object CardCadastro: TCard
       Left = 1
       Top = 1
@@ -34,6 +36,8 @@ object frmCadastroPadrao: TfrmCadastroPadrao
       Color = clGradientInactiveCaption
       ParentBackground = False
       TabOrder = 0
+      ExplicitWidth = 614
+      ExplicitHeight = 434
       object Panel1: TPanel
         Left = 0
         Top = 370
@@ -43,6 +47,8 @@ object frmCadastroPadrao: TfrmCadastroPadrao
         Color = clGradientInactiveCaption
         ParentBackground = False
         TabOrder = 0
+        ExplicitTop = 369
+        ExplicitWidth = 614
         object btnCancelar: TButton
           Left = 539
           Top = 1
@@ -56,6 +62,7 @@ object frmCadastroPadrao: TfrmCadastroPadrao
           Images = ImageList1
           TabOrder = 0
           OnClick = btnCancelarClick
+          ExplicitLeft = 535
         end
         object btnSalvar: TButton
           Left = 461
@@ -69,6 +76,7 @@ object frmCadastroPadrao: TfrmCadastroPadrao
           ImageMargins.Top = 10
           Images = ImageList1
           TabOrder = 1
+          ExplicitLeft = 457
         end
       end
       object pnlInfoTop: TPanel
@@ -78,7 +86,7 @@ object frmCadastroPadrao: TfrmCadastroPadrao
         Height = 41
         Align = alTop
         TabOrder = 1
-        ExplicitTop = 8
+        ExplicitWidth = 614
         object lblInfOperacao: TLabel
           Left = 1
           Top = 1
