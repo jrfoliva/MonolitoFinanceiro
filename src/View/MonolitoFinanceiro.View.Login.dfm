@@ -1664,6 +1664,7 @@ object frmLogin: TfrmLogin
           Width = 224
           Height = 25
           Align = alTop
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clHighlight
           Font.Height = -13
@@ -1671,6 +1672,7 @@ object frmLogin: TfrmLogin
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          OnKeyDown = edtLoginKeyDown
           ExplicitWidth = 220
         end
       end
@@ -1747,6 +1749,7 @@ object frmLogin: TfrmLogin
           ParentFont = False
           PasswordChar = '*'
           TabOrder = 0
+          OnKeyDown = edtSenhaKeyDown
           ExplicitWidth = 220
         end
       end

@@ -18,7 +18,7 @@ type
     function DataUltimoAcesso: String; overload;
     procedure DataUltimoAcesso(aValue: TDateTime); overload;
     function UsuarioUltimoAcesso: String; overload;
-    procedure UsuaruiUltimoAcesso(aValue: String); overload;
+    procedure UsuarioUltimoAcesso(aValue: String); overload;
 
   end;
 
@@ -75,7 +75,7 @@ begin
   Result := GetConfiguracao('ACESSO', 'Usuario', '');
 end;
 
-procedure TdmSistema.UsuaruiUltimoAcesso(aValue: String);
+procedure TdmSistema.UsuarioUltimoAcesso(aValue: String);
 begin
   SetConfiguracao('ACESSO', 'Usuario', aValue);
 end;

@@ -17,46 +17,38 @@ object dmUsuarios: TdmUsuarios
     ProviderName = 'dspUsuarios'
     Left = 224
     Top = 32
-    object cdsUsuariosID: TStringField
-      DisplayWidth = 5
-      FieldName = 'ID'
-      Origin = 'ID'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-      Size = 36
+    object cdsUsuariosid: TAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
-    object cdsUsuariosNOME: TStringField
-      DisplayWidth = 37
-      FieldName = 'NOME'
-      Origin = 'NOME'
+    object cdsUsuariosnome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
       Required = True
-      Size = 50
-    end
-    object cdsUsuariosLOGIN: TStringField
-      DisplayWidth = 20
-      FieldName = 'LOGIN'
-      Origin = 'LOGIN'
-      Required = True
-    end
-    object cdsUsuariosSENHA: TStringField
-      FieldName = 'SENHA'
-      Origin = 'SENHA'
-      Required = True
-      Visible = False
       Size = 60
     end
-    object cdsUsuariosSTATUS: TStringField
-      DisplayWidth = 7
-      FieldName = 'STATUS'
-      Origin = '`STATUS`'
+    object cdsUsuarioslogin: TStringField
+      FieldName = 'login'
+      Origin = 'login'
+      Required = True
+    end
+    object cdsUsuariossenha: TStringField
+      FieldName = 'senha'
+      Origin = 'senha'
+      Required = True
+      Size = 60
+    end
+    object cdsUsuariosstatus: TStringField
+      FieldName = 'status'
+      Origin = '`status`'
       Required = True
       Size = 1
     end
-    object cdsUsuariosDATA_CADASTRO: TDateField
-      DisplayWidth = 14
-      FieldName = 'DATA_CADASTRO'
-      Origin = 'DATA_CADASTRO'
-      Required = True
+    object cdsUsuariosdata: TDateField
+      FieldName = 'data'
+      Origin = '`data`'
     end
   end
   object dspUsuarios: TDataSetProvider

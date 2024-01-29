@@ -3,7 +3,8 @@ unit MonolitoFinanceiro.View.Splash;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   Vcl.Imaging.pngimage, Vcl.ExtCtrls;
 
@@ -49,11 +50,19 @@ begin
     ProgressBar1.StepIt;
     pnlImages.Visible := True;
     case ProgressBar1.Position of
-      10: AtualizaStatus('Carregando as configurações...', imgConfig);
-      25: AtualizaStatus('Carregando dependências...', imgDll);
-      45: AtualizaStatus('Conectando ao Banco de Dados...', imgDB);
-      75: AtualizaStatus('Inicializando o Sistema...', imgStart);
-     100: Close;
+      1:
+        AtualizaStatus('Carregando as configurações...', imgConfig);
+      25:
+        AtualizaStatus('Carregando dependências...', imgDll);
+      50:
+        AtualizaStatus('Conectando ao Banco de Dados...', imgDB);
+      75:
+        AtualizaStatus('Inicializando o Sistema...', imgStart);
+      100:
+        begin
+          sleep(50);
+          close;
+        end;
     end;
   end;
 end;

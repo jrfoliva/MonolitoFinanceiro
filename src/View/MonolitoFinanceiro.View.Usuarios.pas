@@ -8,18 +8,22 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MonolitoFinanceiro.View.CadastroPadrao,
   Data.DB, System.ImageList, Vcl.ImgList, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.WinXPanels, Vcl.WinXCtrls,
-  MonolitoFinanceiro.Utilitarios;
+  MonolitoFinanceiro.Utilitarios, Vcl.Buttons, Vcl.Menus;
 
 type
   TfrmUsuarios = class(TfrmCadastroPadrao)
-    edtNome: TEdit;
-    edtLogin: TEdit;
-    edtSenha: TEdit;
+    pnlSecao: TPanel;
+    gbUsuario: TGroupBox;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    edtNome: TEdit;
+    edtLogin: TEdit;
+    edtSenha: TEdit;
     ToggleStatus: TToggleSwitch;
+    mnuLimparSenha: TPopupMenu;
+    LimparSenha: TMenuItem;
     procedure btnPesquisarClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
@@ -30,6 +34,8 @@ type
     procedure BuscaRegistros;
     procedure edtPesquisaKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure LimparSenhaClick(Sender: TObject);
   private
     { Private declarations }
     procedure LimparCampos;
@@ -44,14 +50,14 @@ var
 implementation
 
 uses
-  MonolitoFinanceiro.Model.Usuarios;
+  MonolitoFinanceiro.Model.Usuarios, BCrypt;
 
 {$R *.dfm}
 
 procedure TfrmUsuarios.btnAlterarClick(Sender: TObject);
 begin
   inherited;
-  LblInfOperacao.Caption := 'Alteração de Usuário';
+  LblInfOperacao.Caption := 'Alteração';
   with dmUsuarios.cdsUsuarios do
   begin
     edtNome.Text := fieldbyname('nome').AsString;
@@ -95,7 +101,7 @@ end;
 procedure TfrmUsuarios.btnIncluirClick(Sender: TObject);
 begin
   inherited;
-  LblInfOperacao.Caption := 'Inclusão de Usuário';
+  LblInfOperacao.Caption := 'Inclusão';
   LimparCampos;
   edtNome.SetFocus;
   dmUsuarios.cdsUsuarios.Insert;
@@ -104,20 +110,21 @@ end;
 procedure TfrmUsuarios.btnPesquisarClick(Sender: TObject);
 begin
   inherited;
-  if (trim(edtPesquisa.Text) <> '') then
-  begin
-    dmUsuarios.cdsUsuarios.Close;
-    dmUsuarios.cdsUsuarios.CommandText := 'Select * from USUARIOS Where nome like :pNome';
-    dmUsuarios.cdsUsuarios.ParamByName('pNome').AsString := trim(edtPesquisa.Text) + '%';
-    dmUsuarios.cdsUsuarios.Open;
-  end
-  else BuscaRegistros;
+  dmUsuarios.cdsUsuarios.close;
+  dmUsuarios.cdsUsuarios.CommandText :=
+    'Select * from USUARIOS where nome like :pNome order by Nome;';
+  dmUsuarios.cdsUsuarios.ParamByName('pNome').AsString :=
+    '%' + trim(edtPesquisa.Text) + '%';
+  dmUsuarios.cdsUsuarios.Open;
+  if dmUsuarios.cdsUsuarios.Recno > 0 then
+    DBGrid1.SelectedIndex := dmUsuarios.cdsUsuarios.Recno - 1;
 end;
 
 procedure TfrmUsuarios.btnSalvarClick(Sender: TObject);
 var
   LStatus: String;
   Mensagem: PWideChar;
+  LHash: String;
 begin
   if edtNome.Text = '' then
   begin
@@ -143,6 +150,10 @@ begin
     abort
   end;
 
+  LStatus := 'A';
+  if ToggleStatus.State = tssOff then
+    LStatus := 'B';
+
   if dmUsuarios.TemLoginCadastrado(trim(edtLogin.Text),
     dmUsuarios.cdsUsuarios.fieldbyname('id').AsString) then
   begin
@@ -153,26 +164,25 @@ begin
     abort;
   end;
 
-  LStatus := 'A';
-  if ToggleStatus.State = tssOff then
-    LStatus := 'B';
-
   Mensagem := 'Registro alterado com sucesso!';
 
   with dmUsuarios.cdsUsuarios do
   begin
     if State in [dsInsert] then
     begin
-      fieldbyname('id').AsString := TUtilitarios.GetID;
-      fieldbyname('data_cadastro').AsDateTime := Now;
+      // fieldbyname('id').AsString := TUtilitarios.GetID; //Definido como auto_increment
+      fieldbyname('data').AsDateTime := Now;
       Mensagem := 'Registro inserido com sucesso!';
     end;
+
+    LHash := TBCrypt.GenerateHash(trim(edtSenha.Text));
     fieldbyname('nome').AsString := trim(edtNome.Text);
     fieldbyname('login').AsString := trim(edtLogin.Text);
-    fieldbyname('senha').AsString := trim(edtSenha.Text);
+    fieldbyname('senha').AsString := LHash;
     fieldbyname('status').AsString := LStatus;
     Post;
     ApplyUpdates(0);
+    Refresh;
   end;
 
   Application.MessageBox(Mensagem, 'Atenção!', MB_OK + MB_ICONINFORMATION);
@@ -186,8 +196,8 @@ procedure TfrmUsuarios.BuscaRegistros;
 begin
   with dmUsuarios.cdsUsuarios do
   begin
-    Close;
-    CommandText := ' Select * from USUARIOS order by nome ';
+    close;
+    CommandText := ' Select * from USUARIOS order by Nome ';
     Open;
   end;
 
@@ -197,16 +207,22 @@ procedure TfrmUsuarios.edtPesquisaKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   inherited;
-  if Trim(edtPesquisa.Text) <> '' then
-    btnPesquisarClick(Self);
+  btnPesquisarClick(Self);
+end;
 
+procedure TfrmUsuarios.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  FreeAndNil(frmUsuarios);
 end;
 
 procedure TfrmUsuarios.FormShow(Sender: TObject);
 begin
   inherited;
-  PnlPrincipal.ActiveCard := CardPesquisa;
+  pnlPrincipal.ActiveCard := CardPesquisa;
   BuscaRegistros;
+  if not dmUsuarios.cdsUsuarios.IsEmpty then
+    DBGrid1.SetFocus;
 end;
 
 procedure TfrmUsuarios.LimparCampos;
@@ -219,10 +235,25 @@ begin
       TCustomEdit(Components[Contador]).Clear
     else if Components[Contador] is TToggleSwitch then
       TToggleSwitch(Components[Contador]).State := tssOn;
+  end;
+end;
+
+procedure TfrmUsuarios.LimparSenhaClick(Sender: TObject);
+begin
+  inherited;
+  if not DataSource1.DataSet.IsEmpty then
+  begin
+    try
+      dmUsuarios.LimparSenha(DataSource1.DataSet.fieldbyname('id').AsString);
+      Application.MessageBox(PWideChar(Format('Senha padrão redefinida para o usuário: %s',[DataSource1.DataSet.fieldbyname('login').AsString])), 'Atenção!', MB_OK + MB_ICONINFORMATION);
+    except
+      on E: Exception do
+        Application.MessageBox(PWideChar(E.Message), 'Atenção!',
+          MB_OK + MB_ICONERROR);
+    end;
 
   end;
 
-  ToggleStatus.State := tssOn;
 end;
 
 end.

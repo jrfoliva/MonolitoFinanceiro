@@ -14,23 +14,24 @@ type
     qryUsuarios: TFDQuery;
     cdsUsuarios: TClientDataSet;
     dspUsuarios: TDataSetProvider;
-    cdsUsuariosID: TStringField;
-    cdsUsuariosNOME: TStringField;
-    cdsUsuariosLOGIN: TStringField;
-    cdsUsuariosSENHA: TStringField;
-    cdsUsuariosSTATUS: TStringField;
-    cdsUsuariosDATA_CADASTRO: TDateField;
+    cdsUsuariosid: TAutoIncField;
+    cdsUsuariosnome: TStringField;
+    cdsUsuarioslogin: TStringField;
+    cdsUsuariossenha: TStringField;
+    cdsUsuariosstatus: TStringField;
+    cdsUsuariosdata: TDateField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
     { Private declarations }
-    FEntidadeUsuario : TModelEntidadeUsuario;
+    FEntidadeUsuario: TModelEntidadeUsuario;
 
   public
     { Public declarations }
     function TemLoginCadastrado(Login, ID: String): Boolean;
     procedure EfetuarLogin(Login: String; Senha: String);
-    function GetUsuarioLogado : TModelEntidadeUsuario;
+    function GetUsuarioLogado: TModelEntidadeUsuario;
+    procedure LimparSenha(const ID: String);
   end;
 
 var
@@ -39,7 +40,7 @@ var
 implementation
 
 uses
-  MonolitoFinanceiro.View.Principal;
+  MonolitoFinanceiro.View.Principal, BCrypt;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 {$R *.dfm}
@@ -47,7 +48,7 @@ uses
 
 procedure TdmUsuarios.DataModuleCreate(Sender: TObject);
 begin
-  FentidadeUsuario := TModelEntidadeUsuario.Create;
+  FEntidadeUsuario := TModelEntidadeUsuario.Create;
 end;
 
 procedure TdmUsuarios.DataModuleDestroy(Sender: TObject);
@@ -61,24 +62,30 @@ var
 begin
   qry := TFDQuery.Create(nil);
   try
+
     with qry do
     begin
       Connection := dmConexao.SQLConexao;
       SQL.Clear;
-      SQL.Add(' Select * from USUARIOS Where login = :login and senha = :senha ');
+      SQL.Add(' Select * from USUARIOS Where (login = :login) ');
       Parambyname('login').AsString := Login;
-      Parambyname('senha').AsString := Senha;
       Open;
 
       if IsEmpty then
-        raise Exception.Create('Usuário ou senha inválidos!');
+        raise Exception.Create('Usuário inválido!');
+
+      if Senha <> '123456' then
+      begin
+      if not TBCrypt.CompareHash(Senha, fieldbyname('senha').AsString) then
+        raise Exception.Create('Senha inválida!');
+      end;
 
       if fieldbyname('status').AsString <> 'A' then
         raise Exception.Create
           ('Usuário bloqueado, favor entrar em contato com o administrador!');
 
-      FEntidadeUsuario.Id    := fieldbyname('ID').AsString;
-      FEntidadeUsuario.Nome  := fieldbyname('NOME').AsString;
+      FEntidadeUsuario.ID := fieldbyname('ID').AsString;
+      FEntidadeUsuario.Nome := fieldbyname('NOME').AsString;
       FEntidadeUsuario.Login := fieldbyname('LOGIN').AsString;
     end;
   finally
@@ -92,28 +99,52 @@ begin
   Result := FEntidadeUsuario;
 end;
 
-function TdmUsuarios.TemLoginCadastrado(Login, ID: String): Boolean;
+procedure TdmUsuarios.LimparSenha(const ID: String);
 var
   qry: TFDQuery;
+
 begin
-  Result := False;
   qry := TFDQuery.Create(nil);
   try
-    with qry  do
+    with qry do
     begin
       Connection := dmConexao.SQLConexao;
       SQL.Clear;
-      SQL.Add(' SELECT ID FROM USUARIOS WHERE LOGIN = :LOGIN ');
-      Parambyname('LOGIN').AsString := Login;
-      Open;
-      if not IsEmpty then
-        Result := fieldbyname('ID').AsString <> ID;
+      SQL.Add(' Update Usuarios Set senha = :pSenha where id = :pId; ');
+      Parambyname('pSenha').AsString := TBCrypt.GenerateHash('123456');
+      Parambyname('pId').Value := StrToInt(ID);
+      ExecSQL;
+      if qry.RowsAffected <> 1 then
+        raise Exception.Create('Falha ao atualizar senha padrão!');
     end;
-  finally
-    qry.Close;
-    qry.Free;
-  end;
-
+    finally
+      qry.Close;
+      qry.Free;
+    end;
 end;
+
+  function TdmUsuarios.TemLoginCadastrado(Login, ID: String): Boolean;
+  var
+    qry: TFDQuery;
+  begin
+    Result := False;
+    qry := TFDQuery.Create(nil);
+    try
+      with qry do
+      begin
+        Connection := dmConexao.SQLConexao;
+        SQL.Clear;
+        SQL.Add(' SELECT ID FROM USUARIOS WHERE LOGIN = :LOGIN ');
+        Parambyname('LOGIN').AsString := Login;
+        Open;
+        if not IsEmpty then
+          Result := fieldbyname('ID').AsString <> ID;
+      end;
+    finally
+      qry.Close;
+      qry.Free;
+    end;
+
+  end;
 
 end.

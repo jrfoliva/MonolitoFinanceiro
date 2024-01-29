@@ -26,6 +26,10 @@ type
     btnEntrar: TButton;
     procedure btnEntrarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure edtLoginKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtSenhaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -61,7 +65,7 @@ begin
   try
     dmUsuarios.EfetuarLogin(Trim(edtLogin.Text), Trim(edtSenha.Text));
     dmSistema.DataUltimoAcesso(Now);
-    dmSistema.UsuaruiUltimoAcesso(dmUsuarios.GetUsuarioLogado.Login);
+    dmSistema.UsuarioUltimoAcesso(dmUsuarios.GetUsuarioLogado.Login);
     ModalResult := mrOk;
   Except
     on Erro: Exception do
@@ -70,6 +74,20 @@ begin
       edtLogin.SetFocus;
     end;
   end;
+end;
+
+procedure TfrmLogin.edtLoginKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (edtLogin.Text <> '') and (key = 13) then
+    edtSenha.SetFocus;
+end;
+
+procedure TfrmLogin.edtSenhaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (edtSenha.Text <> '') and (key = 13) then
+    btnEntrar.SetFocus;
 end;
 
 procedure TfrmLogin.FormShow(Sender: TObject);

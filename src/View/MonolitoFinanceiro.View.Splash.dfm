@@ -2224,6 +2224,7 @@ object frmSplash: TfrmSplash
       Width = 428
       Height = 24
       Align = alBottom
+      DragMode = dmAutomatic
       Step = 1
       TabOrder = 0
     end

@@ -65,8 +65,15 @@ begin
 end;
 
 procedure TfrmPrincipal.mnuUsuariosClick(Sender: TObject);
+var
+  frmUsuarios: TfrmUsuarios;
 begin
-  frmUsuarios.Show;
+  frmUsuarios := TfrmUsuarios.Create(nil);
+  try
+    frmUsuarios.Show;
+  Except on E: Exception do
+    Application.MessageBox(PWideChar('Falha ao criar o formulário de usuários.'), 'Atenção', MB_OK + MB_ICONERROR);
+  end;
 end;
 
 procedure TfrmPrincipal.Timer1Timer(Sender: TObject);
